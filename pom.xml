@@ -20,6 +20,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!--version-->
+    <curator-framework.version>3.3.0</curator-framework.version>
   </properties>
 
   <parent>
@@ -32,6 +35,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.curator</groupId>
+      <artifactId>curator-framework</artifactId>
+      <version>${curator-framework.version}</version>
     </dependency>
   </dependencies>
 
