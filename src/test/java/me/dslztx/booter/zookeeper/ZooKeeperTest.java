@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * curator框架透明处理“与ZooKeeper的connection和session的断开重连”等情况，大大降低编程复杂度<br/>
+ *
  * NodeCache和PathChildrenCache原理：本地缓存远端数据，每隔一段时间比对本地缓存数据与远端最新数据，如果不同触发1次监听器调用。因此，
  * 是“主动侦询”，不是“被动调用”，在“被动调用”下，N次改动会触发N次监听器调用，在“主动侦询”下，如果N次改动在一个主动侦询周期内，则也只会触发1次监听器调用
  */
