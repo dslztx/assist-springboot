@@ -14,11 +14,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BeanConfigSpot {
 
-  @Value("${zookeeper.addresses}")
+  @Value("${zookeeper.addresses:#{null}}")
   String zookeeperAddresses;
 
   @Bean(name = "curatorFramework", initMethod = "start", destroyMethod = "close")
   public CuratorFramework defineCuratorFramework() {
+    if (zookeeperAddresses == null || zookeeperAddresses.length() == 0) {
+      return null;
+    }
     RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
     return CuratorFrameworkFactory
         .newClient(zookeeperAddresses, retryPolicy);
