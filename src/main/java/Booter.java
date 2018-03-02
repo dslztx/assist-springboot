@@ -2,6 +2,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+/**
+ * @author dslztx
+ */
 @SpringBootApplication(scanBasePackages = "me.dslztx.booter")
 public class Booter {
 
