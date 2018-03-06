@@ -37,9 +37,10 @@
       <artifactId>spring-boot-starter</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.curator</groupId>
-      <artifactId>curator-recipes</artifactId>
-      <version>${curator.version}</version>
+      <!--in sub_modules-->
+      <groupId>me.dslztx</groupId>
+      <artifactId>booter-starter-zookeeper</artifactId>
+      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
