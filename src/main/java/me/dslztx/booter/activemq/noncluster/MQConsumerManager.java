@@ -261,6 +261,12 @@ public class MQConsumerManager extends MQClientManager {
       if (msg != null) {
         if (msg instanceof BytesMessage) {
           BytesMessage bytesMessage = (BytesMessage) msg;
+
+          //默认字节流很小
+          if (bytesMessage.getBodyLength() > Integer.MAX_VALUE) {
+            throw new RuntimeException("字节流过大");
+          }
+
           byte[] buffer = new byte[(int) bytesMessage.getBodyLength()];
           bytesMessage.readBytes(buffer);
           return buffer;
