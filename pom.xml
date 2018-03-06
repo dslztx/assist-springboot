@@ -23,6 +23,7 @@
 
     <!--version-->
     <curator.version>3.3.0</curator.version>
+    <booter-starter-zookeeper.version>1.0</booter-starter-zookeeper.version>
   </properties>
 
   <parent>
@@ -40,11 +41,16 @@
       <!--in sub_modules-->
       <groupId>me.dslztx</groupId>
       <artifactId>booter-starter-zookeeper</artifactId>
-      <version>1.0</version>
+      <version>${booter-starter-zookeeper.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-activemq</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
     </dependency>
 
     <!--for test-->
