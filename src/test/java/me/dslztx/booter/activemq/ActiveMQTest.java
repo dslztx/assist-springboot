@@ -3,7 +3,7 @@ package me.dslztx.booter.activemq;
 import java.util.HashMap;
 import java.util.Map;
 import javax.jms.Destination;
-import me.dslztx.booter.Booter;
+import me.dslztx.booter.TestBooter;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Booter.class)
+@SpringBootTest(classes = TestBooter.class)
 public class ActiveMQTest {
 
   private static final Logger logger = LoggerFactory.getLogger(ActiveMQTest.class);
