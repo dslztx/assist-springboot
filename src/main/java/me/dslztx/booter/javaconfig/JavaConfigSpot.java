@@ -5,7 +5,9 @@ import me.dslztx.booter.activemq.noncluster.MQConsumerManager;
 import me.dslztx.booter.activemq.noncluster.MQNodesSync;
 import me.dslztx.booter.activemq.noncluster.MQProducerManager;
 import org.apache.curator.framework.CuratorFramework;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -15,6 +17,12 @@ import org.springframework.context.annotation.Scope;
  */
 @Configuration
 public class JavaConfigSpot {
+
+  /**
+   * 注入对Spring容器的依赖
+   */
+  @Autowired
+  ApplicationContext context;
 
   @Value("${zookeeper.mqNodesPath}")
   String mqNodesPath;
