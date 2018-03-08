@@ -40,6 +40,8 @@ public class JavaConfigSpot {
   }
 
   @Bean(name = "mqConsumerManager", initMethod = "init", destroyMethod = "close")
+  //ActiveMQ客户端“not thread safe”，因此设置为“prototype”
+  @Scope("prototype")
   public MQConsumerManager defineMQConsumerManager(MQNodesSync mqNodesSync) {
     MQConsumerManager mqConsumerManager = new MQConsumerManager(username, password,
         queueForConsumer,
@@ -49,6 +51,8 @@ public class JavaConfigSpot {
   }
 
   @Bean(name = "mqProducerManager", initMethod = "init", destroyMethod = "close")
+  //ActiveMQ客户端“not thread safe”，因此设置为“prototype”
+  @Scope("prototype")
   public MQProducerManager defineMQProducerManager(MQNodesSync mqNodesSync) {
     MQProducerManager mqProducerManager = new MQProducerManager(username, password,
         queueForProducer,
