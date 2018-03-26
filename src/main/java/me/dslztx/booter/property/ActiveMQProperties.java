@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ConfigurationProperties(prefix = "activemq")
-@PropertySource("classpath:conf/activemq.properties")
+@PropertySource(value = {"classpath:conf/activemq.properties", "classpath:application.properties"})
 public class ActiveMQProperties {
 
   String username;
