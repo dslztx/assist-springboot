@@ -1,4 +1,4 @@
-package me.dslztx.booter.activemq.noncluster;
+package me.dslztx.booter.client.activemq.noncluster;
 
 import java.util.List;
 

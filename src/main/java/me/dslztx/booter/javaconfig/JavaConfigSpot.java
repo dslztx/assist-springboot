@@ -1,9 +1,9 @@
 package me.dslztx.booter.javaconfig;
 
-import me.dslztx.booter.activemq.noncluster.DESTTYPE;
-import me.dslztx.booter.activemq.noncluster.MQConsumerManager;
-import me.dslztx.booter.activemq.noncluster.MQNodesSync;
-import me.dslztx.booter.activemq.noncluster.MQProducerManager;
+import me.dslztx.booter.client.activemq.noncluster.DESTTYPE;
+import me.dslztx.booter.client.activemq.noncluster.MQConsumerManager;
+import me.dslztx.booter.client.activemq.noncluster.MQNodesSync;
+import me.dslztx.booter.client.activemq.noncluster.MQProducerManager;
 import me.dslztx.booter.property.ActiveMQProperties;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Autowired;

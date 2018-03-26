@@ -1,4 +1,4 @@
-package me.dslztx.booter.activemq.noncluster;
+package me.dslztx.booter.client.activemq.noncluster;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,28 +9,21 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
+import javax.jms.DeliveryMode;
 import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.ObjectMessage;
+import javax.jms.MessageProducer;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MQConsumerManager extends MQClientManager {
+public class MQProducerManager extends MQClientManager {
 
-  private static final Logger logger = LoggerFactory.getLogger(MQConsumerManager.class);
+  private static final Logger logger = LoggerFactory.getLogger(MQProducerManager.class);
 
-  /**
-   * 读写锁
-   */
   private final ReadWriteLock rwl = new ReentrantReadWriteLock();
-
 
   /**
    * MQ节点地址和端口号列表
@@ -38,14 +31,14 @@ public class MQConsumerManager extends MQClientManager {
   List<String> mqNodes = new ArrayList<String>();
 
   /**
-   * “MQ节点地址和端口号”与“消费者对象”映射关系
+   * “MQ节点地址和端口号”与“生产者对象”关系
    */
-  Map<String, ConsumerTuple> map = new HashMap<String, ConsumerTuple>();
+  Map<String, ProducerTuple> map = new HashMap<String, ProducerTuple>();
 
   /**
-   * 消费者对象列表
+   * 生产者对象列表
    */
-  List<ConsumerTuple> consumers = new ArrayList<ConsumerTuple>();
+  List<ProducerTuple> producers = new ArrayList<ProducerTuple>();
 
   /**
    * 索引器
@@ -56,15 +49,44 @@ public class MQConsumerManager extends MQClientManager {
     }
   };
 
-  public MQConsumerManager(String username, String password, String destination, DESTTYPE type) {
+  /**
+   * 生产者对象生产的消息在MQ中存活的时间，这里的单位是“秒”，默认是24小时
+   */
+  private Integer liveSecs = 86400;
+
+  /**
+   * 生产的消息在MQ上是否作持久化保存，默认不作持久化保存
+   */
+  private Integer deliveryMode = DeliveryMode.NON_PERSISTENT;
+
+  public MQProducerManager(String username, String password, String destination,
+      DESTTYPE type) {
     super(username, password, destination, type);
+  }
+
+  public MQProducerManager(String username, String password, String destination,
+      DESTTYPE type,
+      Integer liveSecs, Integer deliveryMode) {
+    super(username, password, destination, type);
+
+    this.liveSecs = liveSecs;
+    this.deliveryMode = deliveryMode;
   }
 
   @Override
   public void init() {
-    logger.info("In MQConsumerManager,initializing");
+    logger.info("In MQProducerManager,initializing");
 
     super.init();
+  }
+
+  /**
+   * 释放资源
+   */
+  public void close() {
+    for (ProducerTuple tuple : producers) {
+      tuple.destroy();
+    }
   }
 
   /**
@@ -74,27 +96,27 @@ public class MQConsumerManager extends MQClientManager {
   public void syncMQNodes(List<String> nodes) {
     rwl.writeLock().lock();
     try {
-      logger.info("In MQConsumerManager,callback's content is " + nodes);
+      logger.info("In MQProducerManager,callback's content is " + nodes);
 
       // 需要增加的MQ节点
       List<String> toAdd = obtainToAdd(nodes);
 
-      logger.info("In MQConsumerManager,callback's toAdd content is " + toAdd);
+      logger.info("In MQProducerManager,callback's toAdd content is " + toAdd);
 
       // 需要移除的MQ节点
       List<String> toDel = obtainToDel(nodes);
 
-      logger.info("In MQConsumerManager,callback's toDel content is " + toDel);
+      logger.info("In MQProducerManager,callback's toDel content is " + toDel);
 
       // 处理增加
       add(toAdd);
 
-      logger.info("In MQConsumerManager,finish addition");
+      logger.info("In MQProducerManager,finish addition");
 
       // 处理移除
       remove(toDel);
 
-      logger.info("In MQConsumerManager,finish deletion");
+      logger.info("In MQProducerManager,finish deletion");
 
       logger.info("Finally,the MQ list is: " + mqNodes);
     } finally {
@@ -112,41 +134,32 @@ public class MQConsumerManager extends MQClientManager {
 
     mqNodes.removeAll(toDel);
 
-    List<ConsumerTuple> toDelConsumers = new ArrayList<ConsumerTuple>();
+    List<ProducerTuple> toDelProducers = new ArrayList<ProducerTuple>();
     for (String delMQNode : toDel) {
-      toDelConsumers.add(map.get(delMQNode));
+      toDelProducers.add(map.get(delMQNode));
       map.remove(delMQNode);
     }
 
-    consumers.removeAll(toDelConsumers);
+    producers.removeAll(toDelProducers);
 
     // 释放资源
-    for (ConsumerTuple tuple : toDelConsumers) {
+    for (ProducerTuple tuple : toDelProducers) {
       tuple.destroy();
     }
   }
 
   /**
-   * 释放资源
-   */
-  public void close() {
-    for (ConsumerTuple tuple : consumers) {
-      tuple.destroy();
-    }
-  }
-
-  /**
-   * 处理增加，与MQ节点建立新连接，新会话，生成新的消费者对象
+   * 处理增加，与MQ节点建立新连接，新会话，生成新的生产者对象
    */
   private void add(List<String> toAdd) {
     if (toAdd.size() == 0) {
       return;
     }
 
-    List<ConsumerTuple> toAddConsumers = new ArrayList<ConsumerTuple>();
+    List<ProducerTuple> toAddProducers = new ArrayList<ProducerTuple>();
     for (String newMQNode : toAdd) {
       try {
-        MessageConsumer consumer = null;
+        MessageProducer producer = null;
 
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(newMQNode);
         Connection connection = factory.createConnection(username, password);
@@ -155,24 +168,27 @@ public class MQConsumerManager extends MQClientManager {
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         if (type == DESTTYPE.QUEUE) {
           Destination dest = new ActiveMQQueue(destination);
-          consumer = session.createConsumer(dest);
+          producer = session.createProducer(dest);
         } else if (type == DESTTYPE.TOPIC) {
           Topic topic = session.createTopic(destination);
-          consumer = session.createConsumer(topic);
+          producer = session.createProducer(topic);
         }
 
-        ConsumerTuple tuple = new ConsumerTuple(newMQNode, connection, session, consumer);
+        producer.setTimeToLive(1000L * liveSecs);
+        producer.setDeliveryMode(deliveryMode);
+
+        ProducerTuple tuple = new ProducerTuple(newMQNode, connection, session, producer);
 
         mqNodes.add(newMQNode);
         map.put(newMQNode, tuple);
 
-        toAddConsumers.add(tuple);
+        toAddProducers.add(tuple);
       } catch (Exception e) {
         logger.error("", e);
       }
     }
 
-    consumers.addAll(toAddConsumers);
+    producers.addAll(toAddProducers);
   }
 
   private List<String> obtainToAdd(List<String> mqNodesList) {
@@ -196,91 +212,65 @@ public class MQConsumerManager extends MQClientManager {
   }
 
   /**
-   * 依次获取下一个消费者对象
+   * 依次获取下一个生产者对象
    */
-  public ConsumerTuple nextConsumer() {
+  public ProducerTuple nextProducerTuple() {
     rwl.readLock().lock();
     try {
-      if (consumers.size() == 0) {
+      if (producers.size() == 0) {
         return null;
       }
 
       index.set(index.get() + 1);
-      if (index.get().compareTo(consumers.size()) >= 0) {
+      if (index.get().compareTo(producers.size()) >= 0) {
         index.set(0);
       }
 
-      return consumers.get(index.get());
+      return producers.get(index.get());
     } finally {
       rwl.readLock().unlock();
     }
   }
 
-  public String consumeTextMessage() {
+  public void sendTextMessage(String text) {
     try {
-      MessageConsumer consumer = nextConsumer().getConsumer();
-
-      Message msg = consumer.receiveNoWait();
-
-      if (msg != null) {
-        if (msg instanceof TextMessage) {
-          return ((TextMessage) msg).getText();
-        }
-      }
-      return null;
-    } catch (JMSException e) {
+      ProducerTuple tuple = nextProducerTuple();
+      MessageProducer producer = tuple.getProducer();
+      Session session = tuple.getSession();
+      producer.send(session.createTextMessage(text));
+    } catch (Exception e) {
       logger.error("", e);
-      return null;
     }
   }
 
-  public Serializable consumeObjectMessage() {
+  public void sendObjectMessage(Serializable obj) {
     try {
-      MessageConsumer consumer = nextConsumer().getConsumer();
-
-      Message msg = consumer.receiveNoWait();
-
-      if (msg != null) {
-        if (msg instanceof ObjectMessage) {
-          return ((ObjectMessage) msg).getObject();
-        }
-      }
-      return null;
-    } catch (JMSException e) {
+      ProducerTuple tuple = nextProducerTuple();
+      MessageProducer producer = tuple.getProducer();
+      Session session = tuple.getSession();
+      producer.send(session.createObjectMessage(obj));
+    } catch (Exception e) {
       logger.error("", e);
-      return null;
     }
   }
 
-  public byte[] consumeBytesMessage() {
+  public void sendBytesMessage(byte[] bytes) {
     try {
-      MessageConsumer consumer = nextConsumer().getConsumer();
+      ProducerTuple tuple = nextProducerTuple();
+      MessageProducer producer = tuple.getProducer();
+      Session session = tuple.getSession();
 
-      Message msg = consumer.receiveNoWait();
+      BytesMessage bytesMessage = session.createBytesMessage();
+      bytesMessage.writeBytes(bytes);
 
-      if (msg != null) {
-        if (msg instanceof BytesMessage) {
-          BytesMessage bytesMessage = (BytesMessage) msg;
-
-          //默认字节流很小
-          if (bytesMessage.getBodyLength() > Integer.MAX_VALUE) {
-            throw new RuntimeException("字节流过大");
-          }
-
-          byte[] buffer = new byte[(int) bytesMessage.getBodyLength()];
-          bytesMessage.readBytes(buffer);
-          return buffer;
-        }
-      }
-      return null;
-    } catch (JMSException e) {
+      producer.send(bytesMessage);
+    } catch (Exception e) {
       logger.error("", e);
-      return null;
     }
   }
 }
 
-class ConsumerTuple {
+class ProducerTuple {
 
   private static final Logger logger = LoggerFactory.getLogger(ProducerTuple.class);
 
@@ -300,37 +290,34 @@ class ConsumerTuple {
   Session session;
 
   /**
-   * 消费者对象
+   * 生产者对象
    */
-  MessageConsumer consumer;
+  MessageProducer producer;
 
-  public ConsumerTuple(String hostPort, Connection connection, Session session,
-      MessageConsumer consumer) {
+  public ProducerTuple(String hostPort, Connection connection, Session session,
+      MessageProducer producer) {
     this.hostPort = hostPort;
     this.connection = connection;
     this.session = session;
-    this.consumer = consumer;
+    this.producer = producer;
   }
 
   public String getHostPort() {
     return hostPort;
   }
 
+  public MessageProducer getProducer() {
+    return producer;
+  }
+
   public Session getSession() {
     return session;
   }
 
-  public MessageConsumer getConsumer() {
-    return consumer;
-  }
-
-  /**
-   * 释放资源
-   */
   public void destroy() {
-    if (consumer != null) {
+    if (producer != null) {
       try {
-        consumer.close();
+        producer.close();
       } catch (Exception e) {
         logger.error("", e);
       }
