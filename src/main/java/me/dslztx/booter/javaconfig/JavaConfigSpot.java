@@ -4,9 +4,9 @@ import me.dslztx.booter.activemq.noncluster.DESTTYPE;
 import me.dslztx.booter.activemq.noncluster.MQConsumerManager;
 import me.dslztx.booter.activemq.noncluster.MQNodesSync;
 import me.dslztx.booter.activemq.noncluster.MQProducerManager;
+import me.dslztx.booter.property.ActiveMQProperties;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,25 +24,10 @@ public class JavaConfigSpot {
   @Autowired
   ApplicationContext context;
 
-  @Value("${zookeeper.mqNodesPath}")
-  String mqNodesPath;
-
-  @Value("${activemq.username}")
-  String username;
-
-  @Value("${activemq.password}")
-  String password;
-
-  @Value("${activemq.producer.queue}")
-  String queueForProducer;
-
-  @Value("${activemq.consumer.queue}")
-  String queueForConsumer;
-
   @Bean(name = "mqNodesSync")
   @Scope("prototype")
-  public MQNodesSync defineMQNodesSync(CuratorFramework curatorFramework) {
-    MQNodesSync mqNodesSync = new MQNodesSync(mqNodesPath);
+  public MQNodesSync defineMQNodesSync(CuratorFramework curatorFramework, ActiveMQProperties prop) {
+    MQNodesSync mqNodesSync = new MQNodesSync(prop.getMqNodesPath());
     mqNodesSync.setCuratorFramework(curatorFramework);
     return mqNodesSync;
   }
@@ -50,10 +35,10 @@ public class JavaConfigSpot {
   @Bean(name = "mqConsumerManager", initMethod = "init", destroyMethod = "close")
   //ActiveMQ客户端“not thread safe”，因此设置为“prototype”
   @Scope("prototype")
-  public MQConsumerManager defineMQConsumerManager(MQNodesSync mqNodesSync) {
-    MQConsumerManager mqConsumerManager = new MQConsumerManager(username, password,
-        queueForConsumer,
-        DESTTYPE.QUEUE);
+  public MQConsumerManager defineMQConsumerManager(MQNodesSync mqNodesSync,
+      ActiveMQProperties prop) {
+    MQConsumerManager mqConsumerManager = new MQConsumerManager(prop.getUsername(),
+        prop.getPassword(), prop.getQueueForConsumer(), DESTTYPE.QUEUE);
     mqConsumerManager.setMqNodesSync(mqNodesSync);
     return mqConsumerManager;
   }
@@ -61,10 +46,10 @@ public class JavaConfigSpot {
   @Bean(name = "mqProducerManager", initMethod = "init", destroyMethod = "close")
   //ActiveMQ客户端“not thread safe”，因此设置为“prototype”
   @Scope("prototype")
-  public MQProducerManager defineMQProducerManager(MQNodesSync mqNodesSync) {
-    MQProducerManager mqProducerManager = new MQProducerManager(username, password,
-        queueForProducer,
-        DESTTYPE.TOPIC);
+  public MQProducerManager defineMQProducerManager(MQNodesSync mqNodesSync,
+      ActiveMQProperties prop) {
+    MQProducerManager mqProducerManager = new MQProducerManager(prop.getUsername(),
+        prop.getPassword(), prop.getQueueForProducer(), DESTTYPE.TOPIC);
     mqProducerManager.setMqNodesSync(mqNodesSync);
     return mqProducerManager;
   }
