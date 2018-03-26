@@ -2,6 +2,7 @@ package me.dslztx.booter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -11,7 +12,7 @@ import org.springframework.context.ApplicationContext;
  *
  * @author dslztx
  */
-@SpringBootApplication(scanBasePackages = "me.dslztx.booter")
+@SpringBootApplication(scanBasePackages = "me.dslztx.booter", exclude = ActiveMQAutoConfiguration.class)
 public class Booter {
 
   public static void main(String[] args) {
