@@ -1,7 +1,6 @@
 package me.dslztx.booter.autoconfigure.zookeeper;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 
 /**
  * @author dslztx
@@ -9,7 +8,6 @@ import org.springframework.context.annotation.PropertySource;
 @ConfigurationProperties(
     prefix = "zookeeper.curator"
 )
-@PropertySource(value = {"classpath:conf/zookeeper.properties", "classpath:application.properties"})
 public class ZooKeeperCuratorProperties {
 
   String addresses;
