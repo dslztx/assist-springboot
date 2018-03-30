@@ -1,16 +1,24 @@
 package me.dslztx.booter.javaconfig;
 
+import com.alibaba.druid.pool.DruidDataSource;
+import java.util.HashMap;
+import java.util.Map;
 import me.dslztx.booter.client.activemq.noncluster.DESTTYPE;
 import me.dslztx.booter.client.activemq.noncluster.MQConsumerManager;
 import me.dslztx.booter.client.activemq.noncluster.MQNodesSync;
 import me.dslztx.booter.client.activemq.noncluster.MQProducerManager;
+import me.dslztx.booter.client.mysql.DataSourcePool;
+import me.dslztx.booter.client.mysql.JdbcTemplatePool;
 import me.dslztx.booter.property.ActiveMQProperties;
+import me.dslztx.booter.property.MysqlProperties;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * @author dslztx
@@ -52,6 +60,47 @@ public class JavaConfigSpot {
         prop.getPassword(), prop.getQueueForProducer(), DESTTYPE.TOPIC);
     mqProducerManager.setMqNodesSync(mqNodesSync);
     return mqProducerManager;
+  }
+
+  @Bean(name = "dataSourcePool", initMethod = "init", destroyMethod = "close")
+  @Lazy
+  public DataSourcePool defineDataSourcePool(MysqlProperties prop) {
+    DataSourcePool dataSourcePool = new DataSourcePool();
+
+    Map<String, DruidDataSource> namedDataSources = new HashMap<>();
+
+    for (String name : prop.getMap().keySet()) {
+      DruidDataSource dataSource = new DruidDataSource();
+
+      dataSource.setUrl(prop.getMap().get(name).getUrl());
+      dataSource.setUsername(prop.getMap().get(name).getUsername());
+      dataSource.setPassword(prop.getMap().get(name).getPassword());
+
+      namedDataSources.put(name, dataSource);
+    }
+
+    dataSourcePool.setNamedDataSources(namedDataSources);
+
+    return dataSourcePool;
+  }
+
+  @Bean(name = "jdbcTemplatePool")
+  @Lazy
+  public JdbcTemplatePool defineJdbcTemplatePool(DataSourcePool dataSourcePool) {
+    JdbcTemplatePool jdbcTemplatePool = new JdbcTemplatePool();
+
+    Map<String, JdbcTemplate> namedJdbcTemplates = new HashMap<>();
+
+    for (String name : dataSourcePool.getNamedDataSources().keySet()) {
+      JdbcTemplate jdbcTemplate = new JdbcTemplate(
+          dataSourcePool.getNamedDataSources().get(name));
+
+      namedJdbcTemplates.put(name, jdbcTemplate);
+    }
+
+    jdbcTemplatePool.setNamedJdbcTemplates(namedJdbcTemplates);
+
+    return jdbcTemplatePool;
   }
 
 }
