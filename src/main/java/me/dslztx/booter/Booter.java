@@ -2,8 +2,14 @@ package me.dslztx.booter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.dao.PersistenceExceptionTranslationAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
+import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -16,7 +22,11 @@ import org.springframework.context.ApplicationContext;
  * @author dslztx
  */
 @SpringBootApplication(scanBasePackages = "me.dslztx.booter", exclude = {
-    ActiveMQAutoConfiguration.class, DataSourceAutoConfiguration.class})
+    JmxAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class,
+    WebClientAutoConfiguration.class,
+    ActiveMQAutoConfiguration.class, DataSourceAutoConfiguration.class,
+    DataSourceTransactionManagerAutoConfiguration.class, TransactionAutoConfiguration.class,
+    PersistenceExceptionTranslationAutoConfiguration.class})
 public class Booter {
 
   public static void main(String[] args) {
