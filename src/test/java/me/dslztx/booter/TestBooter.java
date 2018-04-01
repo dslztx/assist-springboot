@@ -11,7 +11,8 @@ import org.springframework.context.ConfigurableApplicationContext;
  *
  * @author dslztx
  */
-@SpringBootApplication(scanBasePackages = "me.dslztx.booter.activemq")
+@SpringBootApplication(scanBasePackages = {"me.dslztx.booter.activemq", "me.dslztx.booter.client",
+    "me.dslztx.booter.javaconfig", "me.dslztx.booter.property"})
 public class TestBooter {
 
   public static void main(String[] args) {
