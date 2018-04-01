@@ -23,10 +23,9 @@ import org.springframework.context.ApplicationContext;
  */
 @SpringBootApplication(scanBasePackages = "me.dslztx.booter", exclude = {
     JmxAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class,
-    WebClientAutoConfiguration.class,
-    ActiveMQAutoConfiguration.class, DataSourceAutoConfiguration.class,
-    DataSourceTransactionManagerAutoConfiguration.class, TransactionAutoConfiguration.class,
-    PersistenceExceptionTranslationAutoConfiguration.class})
+    WebClientAutoConfiguration.class, ActiveMQAutoConfiguration.class,
+    DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class,
+    TransactionAutoConfiguration.class, PersistenceExceptionTranslationAutoConfiguration.class})
 public class Booter {
 
   public static void main(String[] args) {
