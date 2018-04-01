@@ -26,6 +26,7 @@
     <booter-starter-zookeeper.version>1.0</booter-starter-zookeeper.version>
     <alibaba.druid.version>1.1.9</alibaba.druid.version>
     <activemq.version>5.14.5</activemq.version>
+    <commons-io.version>2.6</commons-io.version>
   </properties>
 
   <parent>
@@ -58,7 +59,7 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.6</version>
+      <version>${commons-io.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -76,13 +77,13 @@
 
     <!--for test-->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
