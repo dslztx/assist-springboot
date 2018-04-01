@@ -1,5 +1,6 @@
 package me.dslztx.booter;
 
+import me.dslztx.booter.autoconfigure.zookeeper.ZooKeeperCuratorAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -12,7 +13,8 @@ import org.springframework.context.ConfigurableApplicationContext;
  * @author dslztx
  */
 @SpringBootApplication(scanBasePackages = {"me.dslztx.booter.activemq", "me.dslztx.booter.client",
-    "me.dslztx.booter.javaconfig", "me.dslztx.booter.property"})
+    "me.dslztx.booter.javaconfig",
+    "me.dslztx.booter.property"}, exclude = ZooKeeperCuratorAutoConfiguration.class)
 public class TestBooter {
 
   public static void main(String[] args) {
