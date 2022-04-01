@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.dslztx</groupId>
-  <artifactId>booter</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>assist-springboot</artifactId>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <url>https://github.com/dslztx/booter</url>
