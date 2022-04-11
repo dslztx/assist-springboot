@@ -1,4 +1,4 @@
-package me.dslztx.sprintboot;
+package web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,21 +12,21 @@ import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfigu
 import org.springframework.context.ApplicationContext;
 
 /**
- * 增加“exclude=ZooKeeperCuratorAutoConfiguration.class”，放弃“ZooKeeperCuratorAutoConfiguration”对应的自动配置<br/>
- *
+ * 默认的包扫描路径是SpringBooter所在包和子包<br/>
+ * <p>
  * 增加“exclude=ActiveMQAutoConfiguration.class”，放弃“ActiveMQAutoConfiguration”对应的自动配置<br/>
- *
+ * <p>
  * 增加“exclude=DataSourceAutoConfiguration.class”，放弃“DataSourceAutoConfiguration”对应的自动配置<br/>
  *
  * @author dslztx
  */
 @SpringBootApplication(exclude = {JmxAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class,
-    ActiveMQAutoConfiguration.class, DataSourceAutoConfiguration.class,
-    DataSourceTransactionManagerAutoConfiguration.class, TransactionAutoConfiguration.class,
-    PersistenceExceptionTranslationAutoConfiguration.class})
+        ActiveMQAutoConfiguration.class, DataSourceAutoConfiguration.class,
+        DataSourceTransactionManagerAutoConfiguration.class, TransactionAutoConfiguration.class,
+        PersistenceExceptionTranslationAutoConfiguration.class})
 public class SpringBooter {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ApplicationContext context = SpringApplication.run(SpringBooter.class, args);
 
         String[] beanDefinitions = context.getBeanDefinitionNames();

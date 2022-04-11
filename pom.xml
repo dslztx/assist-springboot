@@ -1,0 +1,147 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.0.RELEASE</version>
+    </parent>
+
+    <groupId>me.dslztx</groupId>
+    <artifactId>assist-springboot-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>assist-springboot-web</module>
+        <module>assist-springboot-dubbo</module>
+    </modules>
+
+    <url>https://github.com/dslztx/assist_springboot</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--version-->
+        <!--以me.dslztx开头，避免变量名冲突，导致加载奇怪的依赖，比如在-->
+        <!--"org.springframework.boot:spring-boot-dependencies"JAR包中定义了"log4j2.version"变量-->
+        <!--version-->
+
+        <me.dslztx.assist.version>3.0.19</me.dslztx.assist.version>
+        <me.dslztx.slf4j.version>1.7.30</me.dslztx.slf4j.version>
+        <me.dslztx.junit.version>4.13.1</me.dslztx.junit.version>
+        <me.dslztx.mockito.version>2.20.0</me.dslztx.mockito.version>
+        <me.dslztx.alibaba.fastjson.version>1.2.56</me.dslztx.alibaba.fastjson.version>
+        <me.dslztx.mybatis.version>3.3.0</me.dslztx.mybatis.version>
+        <me.dslztx.spring.version>5.0.12.RELEASE</me.dslztx.spring.version>
+        <me.dslztx.lombok.version>1.18.22</me.dslztx.lombok.version>
+
+        <plugin-compiler.version>3.0</plugin-compiler.version>
+        <plugin-compiler.compile.encoding>UTF-8</plugin-compiler.compile.encoding>
+        <plugin-compiler.compile.source.version>1.8</plugin-compiler.compile.source.version>
+        <plugin-compiler.compile.target.version>1.8</plugin-compiler.compile.target.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>me.dslztx</groupId>
+            <artifactId>assist-log</artifactId>
+            <version>${me.dslztx.assist.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${me.dslztx.slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${me.dslztx.lombok.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${me.dslztx.junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>me.dslztx</groupId>
+                <artifactId>assist-core</artifactId>
+                <version>${me.dslztx.assist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>me.dslztx</groupId>
+                <artifactId>assist-client</artifactId>
+                <version>${me.dslztx.assist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${me.dslztx.alibaba.fastjson.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${plugin-compiler.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <encoding>${plugin-compiler.compile.encoding}</encoding>
+                            <source>${plugin-compiler.compile.source.version}</source>
+                            <target>${plugin-compiler.compile.target.version}</target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <encoding>${plugin-compiler.compile.encoding}</encoding>
+                            <source>${plugin-compiler.compile.source.version}</source>
+                            <target>${plugin-compiler.compile.target.version}</target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
