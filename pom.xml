@@ -9,14 +9,16 @@
         <version>2.3.0.RELEASE</version>
     </parent>
 
-    <groupId>me.dslztx</groupId>
-    <artifactId>assist-springboot-parent</artifactId>
+    <groupId>me.dslztx.springboot</groupId>
+    <artifactId>parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>assist-springboot-web</module>
-        <module>assist-springboot-dubbo</module>
+        <module>web</module>
+        <module>dubbo-provider</module>
+        <module>dubbo-consumer</module>
+        <module>dubbo-api</module>
     </modules>
 
     <url>https://github.com/dslztx/assist_springboot</url>

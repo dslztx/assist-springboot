@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>me.dslztx</groupId>
-        <artifactId>assist-springboot-parent</artifactId>
+        <groupId>me.dslztx.springboot</groupId>
+        <artifactId>parent</artifactId>
         <version>1.0.0</version>
     </parent>
 
 
-    <artifactId>assist-springboot-dubbo</artifactId>
+    <artifactId>dubbo-api</artifactId>
     <packaging>jar</packaging>
 
 
@@ -26,4 +26,6 @@
         <commons-io.version>2.6</commons-io.version>
     </properties>
 
+    <dependencies>
+    </dependencies>
 </project>
