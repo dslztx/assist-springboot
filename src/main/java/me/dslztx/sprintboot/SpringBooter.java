@@ -1,4 +1,4 @@
-package me.dslztx.booter;
+package me.dslztx.sprintboot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -21,15 +20,14 @@ import org.springframework.context.ApplicationContext;
  *
  * @author dslztx
  */
-@SpringBootApplication(scanBasePackages = "me.dslztx.booter",
-    exclude = {JmxAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class,
-        WebClientAutoConfiguration.class, ActiveMQAutoConfiguration.class, DataSourceAutoConfiguration.class,
-        DataSourceTransactionManagerAutoConfiguration.class, TransactionAutoConfiguration.class,
-        PersistenceExceptionTranslationAutoConfiguration.class})
-public class Booter {
+@SpringBootApplication(exclude = {JmxAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class,
+    ActiveMQAutoConfiguration.class, DataSourceAutoConfiguration.class,
+    DataSourceTransactionManagerAutoConfiguration.class, TransactionAutoConfiguration.class,
+    PersistenceExceptionTranslationAutoConfiguration.class})
+public class SpringBooter {
 
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(Booter.class, args);
+        ApplicationContext context = SpringApplication.run(SpringBooter.class, args);
 
         String[] beanDefinitions = context.getBeanDefinitionNames();
         System.out.println("beans as follows are registered : ");
