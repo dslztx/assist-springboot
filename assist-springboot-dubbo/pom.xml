@@ -11,7 +11,7 @@
     </parent>
 
 
-    <artifactId>assist-springboot-web</artifactId>
+    <artifactId>assist-springboot-dubbo</artifactId>
     <packaging>jar</packaging>
 
 

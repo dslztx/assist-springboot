@@ -26,7 +26,8 @@ import org.springframework.context.ApplicationContext;
         PersistenceExceptionTranslationAutoConfiguration.class})
 public class SpringBooter {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+        //创建了一个SpringContext
         ApplicationContext context = SpringApplication.run(SpringBooter.class, args);
 
         String[] beanDefinitions = context.getBeanDefinitionNames();
