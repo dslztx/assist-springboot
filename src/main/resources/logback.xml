@@ -1,19 +1,19 @@
 <configuration>
 
-  <appender name="timeBased-LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>log/info.log</file>
-    <append>true</append>
-    <encoder>
-      <pattern>%d [%thread] %-5level %logger{35} - %msg%n</pattern>
-    </encoder>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>log/info.log.%d</fileNamePattern>
-      <maxHistory>10</maxHistory>
-    </rollingPolicy>
-  </appender>
+    <appender name="timeBased-LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/info.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>log/info.log.%d</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+    </appender>
 
-  <root level="INFO">
-    <appender-ref ref="timeBased-LOGFILE"/>
-  </root>
+    <root level="INFO">
+        <appender-ref ref="timeBased-LOGFILE"/>
+    </root>
 
 </configuration>

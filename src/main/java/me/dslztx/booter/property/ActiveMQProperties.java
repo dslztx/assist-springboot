@@ -9,53 +9,53 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = {"classpath:conf/activemq.properties", "classpath:application.properties"})
 public class ActiveMQProperties {
 
-  String username;
+    String username;
 
-  String password;
+    String password;
 
-  String queueForProducer;
+    String queueForProducer;
 
-  String queueForConsumer;
+    String queueForConsumer;
 
-  String mqNodesPath;
+    String mqNodesPath;
 
-  public String getUsername() {
-    return username;
-  }
+    public String getUsername() {
+        return username;
+    }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-  public String getPassword() {
-    return password;
-  }
+    public String getPassword() {
+        return password;
+    }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-  public String getQueueForProducer() {
-    return queueForProducer;
-  }
+    public String getQueueForProducer() {
+        return queueForProducer;
+    }
 
-  public void setQueueForProducer(String queueForProducer) {
-    this.queueForProducer = queueForProducer;
-  }
+    public void setQueueForProducer(String queueForProducer) {
+        this.queueForProducer = queueForProducer;
+    }
 
-  public String getQueueForConsumer() {
-    return queueForConsumer;
-  }
+    public String getQueueForConsumer() {
+        return queueForConsumer;
+    }
 
-  public void setQueueForConsumer(String queueForConsumer) {
-    this.queueForConsumer = queueForConsumer;
-  }
+    public void setQueueForConsumer(String queueForConsumer) {
+        this.queueForConsumer = queueForConsumer;
+    }
 
-  public String getMqNodesPath() {
-    return mqNodesPath;
-  }
+    public String getMqNodesPath() {
+        return mqNodesPath;
+    }
 
-  public void setMqNodesPath(String mqNodesPath) {
-    this.mqNodesPath = mqNodesPath;
-  }
+    public void setMqNodesPath(String mqNodesPath) {
+        this.mqNodesPath = mqNodesPath;
+    }
 }

@@ -21,22 +21,22 @@ import org.springframework.context.ApplicationContext;
  *
  * @author dslztx
  */
-@SpringBootApplication(scanBasePackages = "me.dslztx.booter", exclude = {
-    JmxAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class,
-    WebClientAutoConfiguration.class, ActiveMQAutoConfiguration.class,
-    DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class,
-    TransactionAutoConfiguration.class, PersistenceExceptionTranslationAutoConfiguration.class})
+@SpringBootApplication(scanBasePackages = "me.dslztx.booter",
+    exclude = {JmxAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class,
+        WebClientAutoConfiguration.class, ActiveMQAutoConfiguration.class, DataSourceAutoConfiguration.class,
+        DataSourceTransactionManagerAutoConfiguration.class, TransactionAutoConfiguration.class,
+        PersistenceExceptionTranslationAutoConfiguration.class})
 public class Booter {
 
-  public static void main(String[] args) {
-    ApplicationContext context = SpringApplication.run(Booter.class, args);
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(Booter.class, args);
 
-    String[] beanDefinitions = context.getBeanDefinitionNames();
-    System.out.println("beans as follows are registered : ");
-    if (beanDefinitions != null) {
-      for (String beanDefinition : beanDefinitions) {
-        System.out.println(beanDefinition);
-      }
+        String[] beanDefinitions = context.getBeanDefinitionNames();
+        System.out.println("beans as follows are registered : ");
+        if (beanDefinitions != null) {
+            for (String beanDefinition : beanDefinitions) {
+                System.out.println(beanDefinition);
+            }
+        }
     }
-  }
 }
