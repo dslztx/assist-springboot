@@ -1,28 +1,21 @@
-package consumer;
+package provider;
 
-import dubbo.service.DubboService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 
-import javax.annotation.PostConstruct;
-
 /**
  * @author dslztx
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@ImportResource("classpath:spring-dubbo-consumer.xml")
-public class SpringBooter {
-
-    @Autowired
-    private DubboService dubboService;
+@ImportResource(locations = "classpath:provider.xml")
+public class Booter {
 
     public static void main(String[] args) {
         //创建了一个SpringContext
-        ApplicationContext context = SpringApplication.run(SpringBooter.class, args);
+        ApplicationContext context = SpringApplication.run(Booter.class, args);
 
         String[] beanDefinitions = context.getBeanDefinitionNames();
         System.out.println("beans as follows are registered : ");
@@ -31,10 +24,22 @@ public class SpringBooter {
                 System.out.println(beanDefinition);
             }
         }
+
+        keepAppAlive();
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println(dubboService.helloWorld());
+    private static void keepAppAlive() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(24 * 3600 * 1000L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 }

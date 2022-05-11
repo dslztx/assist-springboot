@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!--    不用元数据中心-->
+    <dubbo:metadata-report/>
+
+    <!--    不用配置中心-->
+    <dubbo:config-center/>
+
+    <dubbo:application name="dubbo-consumer">
+        <dubbo:parameter key="qos.enable" value="false"/>
+    </dubbo:application>
+
+    <dubbo:registry id="zk1" client="curator" protocol="zookeeper"
+                    address="10.110.20.22:2181,10.110.20.23:2181,10.110.20.24:2181"/>
+
+
+    <dubbo:reference registry="zk1" id="dubboService"
+                     interface="dubbo.service.DubboService"
+                     timeout="1000"
+                     retries="0" group="dubboStudy" version="1.0.0"/>
+
+
+</beans>
