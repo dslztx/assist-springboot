@@ -12,7 +12,6 @@
         <module>dubbo-springboot-provider</module>
         <module>dubbo-springboot-consumer</module>
         <module>dubbo-springboot-api</module>
-        <module>web</module>
     </modules>
 
     <url>https://github.com/dslztx/assist_springboot</url>
