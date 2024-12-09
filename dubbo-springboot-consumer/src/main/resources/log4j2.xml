@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Properties>
+        <Property name="pattern_layout">%d %p [%t] [%C{1}:%L] %m%n</Property>
+        <Property name="log_dir">logs</Property>
+        <Property name="log_size">20M</Property>
+        <Property name="log_file_num">100</Property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile name="INFO_FILE" fileName="${log_dir}/info.log"
+                     filePattern="${log_dir}/info.log.%i">
+            <filters>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+
+            <PatternLayout>
+                <Charset>UTF-8</Charset>
+                <Pattern>${pattern_layout}</Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${log_size}"/>
+            </Policies>
+
+            <DefaultRolloverStrategy fileIndex="min" max="${log_file_num}"/>
+        </RollingFile>
+
+        <RollingFile name="WARN_FILE" fileName="${log_dir}/warn.log"
+                     filePattern="${log_dir}/warn.log.%i">
+            <filters>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+
+            <PatternLayout>
+                <Charset>UTF-8</Charset>
+                <Pattern>${pattern_layout}</Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${log_size}"/>
+            </Policies>
+
+            <DefaultRolloverStrategy fileIndex="min" max="${log_file_num}"/>
+        </RollingFile>
+
+        <RollingFile name="ERROR_UP_FILE" fileName="${log_dir}/error.log"
+                     filePattern="${log_dir}/error.log.%i">
+            <filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+
+            <PatternLayout>
+                <Charset>UTF-8</Charset>
+                <Pattern>${pattern_layout}</Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${log_size}"/>
+            </Policies>
+
+            <DefaultRolloverStrategy fileIndex="min" max="${log_file_num}"/>
+        </RollingFile>
+
+        <RollingFile name="DEBUG_BELOW_FILE" fileName="${log_dir}/debug.log"
+                     filePattern="${log_dir}/debug.log.%i">
+            <filters>
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="ACCEPT"/>
+            </filters>
+
+            <PatternLayout>
+                <Charset>UTF-8</Charset>
+                <Pattern>${pattern_layout}</Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${log_size}"/>
+            </Policies>
+
+            <DefaultRolloverStrategy fileIndex="min" max="${log_file_num}"/>
+        </RollingFile>
+
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Charset>UTF-8</Charset>
+                <Pattern>${pattern_layout}</Pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <!--主要作为一个样例：设置独立的level，就跟Root Logger的level设置无关；设置additivity，使得不继承祖先的Appender配置-->
+        <Logger name="me.dslztx.assist.client.mysql.DaoFactory" level="DEBUG" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="INFO_FILE"/>
+            <AppenderRef ref="DEBUG_BELOW_FILE"/>
+        </Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="INFO_FILE"/>
+            <AppenderRef ref="WARN_FILE"/>
+            <AppenderRef ref="ERROR_UP_FILE"/>
+            <AppenderRef ref="DEBUG_BELOW_FILE"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

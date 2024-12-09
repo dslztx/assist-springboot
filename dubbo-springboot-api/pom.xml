@@ -5,19 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>me.dslztx.springboot</groupId>
-        <artifactId>parent</artifactId>
+        <groupId>me.dslztx.study</groupId>
+        <artifactId>dubbo-springboot-parent</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>web</artifactId>
+
+    <artifactId>dubbo-springboot-api</artifactId>
     <packaging>jar</packaging>
 
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.3.0.RELEASE</version>
-        </dependency>
     </dependencies>
 </project>

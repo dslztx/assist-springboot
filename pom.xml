@@ -3,22 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.0.RELEASE</version>
-    </parent>
-
-    <groupId>me.dslztx.springboot</groupId>
-    <artifactId>parent</artifactId>
+    <groupId>me.dslztx.study</groupId>
+    <artifactId>dubbo-springboot-parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <modules>
+        <module>dubbo-springboot-provider</module>
+        <module>dubbo-springboot-consumer</module>
+        <module>dubbo-springboot-api</module>
         <module>web</module>
-        <module>dubbo-provider</module>
-        <module>dubbo-consumer</module>
-        <module>dubbo-api</module>
     </modules>
 
     <url>https://github.com/dslztx/assist_springboot</url>
@@ -38,14 +32,19 @@
         <!--"org.springframework.boot:spring-boot-dependencies"JAR包中定义了"log4j2.version"变量-->
         <!--version-->
 
-        <me.dslztx.assist.version>3.0.19</me.dslztx.assist.version>
+        <me.dslztx.lombok.version>1.18.22</me.dslztx.lombok.version>
         <me.dslztx.slf4j.version>1.7.30</me.dslztx.slf4j.version>
         <me.dslztx.junit.version>4.13.1</me.dslztx.junit.version>
         <me.dslztx.mockito.version>2.20.0</me.dslztx.mockito.version>
-        <me.dslztx.alibaba.fastjson.version>1.2.56</me.dslztx.alibaba.fastjson.version>
-        <me.dslztx.mybatis.version>3.3.0</me.dslztx.mybatis.version>
-        <me.dslztx.spring.version>5.0.12.RELEASE</me.dslztx.spring.version>
-        <me.dslztx.lombok.version>1.18.22</me.dslztx.lombok.version>
+
+        <me.dslztx.dubbo.version>2.7.8</me.dslztx.dubbo.version>
+        <me.dslztx.springboot.version>2.3.0.RELEASE</me.dslztx.springboot.version>
+        <me.dslztx.spring.version>5.2.6.RELEASE</me.dslztx.spring.version>
+        <me.dslztx.curator.version>2.12.0</me.dslztx.curator.version>
+        <me.dslztx.zookeeper.version>3.4.8</me.dslztx.zookeeper.version>
+
+        <me.dslztx.assist.version>3.0.19</me.dslztx.assist.version>
+
 
         <plugin-compiler.version>3.0</plugin-compiler.version>
         <plugin-compiler.compile.encoding>UTF-8</plugin-compiler.compile.encoding>
@@ -55,20 +54,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>me.dslztx</groupId>
-            <artifactId>assist-log</artifactId>
-            <version>${me.dslztx.assist.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${me.dslztx.lombok.version}</version>
         </dependency>
 
         <dependency>
@@ -77,16 +65,18 @@
             <version>${me.dslztx.slf4j.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${me.dslztx.lombok.version}</version>
-        </dependency>
-
+        <!--for test-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${me.dslztx.junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${me.dslztx.mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -95,19 +85,85 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${me.dslztx.dubbo.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${me.dslztx.springboot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${me.dslztx.spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${me.dslztx.spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${me.dslztx.spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${me.dslztx.spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${me.dslztx.curator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${me.dslztx.zookeeper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>me.dslztx</groupId>
+                <artifactId>assist-log</artifactId>
+                <version>${me.dslztx.assist.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>me.dslztx</groupId>
                 <artifactId>assist-core</artifactId>
                 <version>${me.dslztx.assist.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>me.dslztx</groupId>
-                <artifactId>assist-client</artifactId>
-                <version>${me.dslztx.assist.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${me.dslztx.alibaba.fastjson.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

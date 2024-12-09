@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!--    https://dubbo.apache.org/zh/docs/references/xml/-->
+
+    <!--    不用元数据中心-->
+    <dubbo:metadata-report/>
+
+    <!--    不用配置中心-->
+    <dubbo:config-center/>
+
+    <dubbo:application name="dubbo-consumer">
+        <dubbo:parameter key="qos.enable" value="false"/>
+    </dubbo:application>
+
+    <!--    用<dubbo:reference>而不用<dubbo:consumer/>-->
+
+    <!--    <dubbo:consumer>-->
+    <!--    是<dubbo:reference>标签中未配置属性的默认值-->
+    <!--    https://dubbo.apache.org/zh/blog/2018/08/14/dubbo-%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95-provider-%E9%85%8D%E7%BD%AE/-->
+
+    <dubbo:registry id="zk1" client="curator" protocol="zookeeper"
+                    address="10.47.181.20:2181,10.47.181.21:2181,10.47.181.22:2181"/>
+
+
+    <dubbo:reference registry="zk1" id="dubboService"
+                     interface="dubbo.api.service.DubboService"
+                     timeout="1000"
+                     retries="0" group="dubboStudy" version="1.0.0"/>
+
+
+</beans>
